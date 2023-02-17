@@ -2,16 +2,26 @@
 
 class ApplicationController < ActionController::Base
   include ErrorHandling
+  include Authentication
+  
+  around_action :switch_locale 
 
   private
 
-  def current_user
-    @current_user ||= User.find_by(id: session[:user_id]).decorate if session[:user_id].present?
+  def switch_locale(&action)
+    locale = locale_from_url || I18n.default_locale
+    I18n.with_locale locale, &action
   end
 
-  def user_signed_in?
-    current_user.present?
+  def locale_from_url
+    locale = params[:locale]
+
+    return locale if I18n.available_locales.map(&:to_s).include?(locale)
   end
 
-  helper_method :current_user, :user_signed_in?
+  def default_url_options
+    {locale: I18n.locale}
+  end
 end
+
+

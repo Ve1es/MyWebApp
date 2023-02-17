@@ -12,6 +12,7 @@ class QuestionsController < ApplicationController
     @question = @question.decorate
     @answer = @question.answers.build
     @answers = @question.answers.order(created_at: :desc).page params[:page]
+    @answers = @answers.decorate
   end
 
   def new
@@ -24,7 +25,7 @@ class QuestionsController < ApplicationController
   end
 
   def create
-    @question = Question.new question_params
+    @question = current_user.questions.build question_params
     if @question.save
       flash[:success] = 'Question created!'
       redirect_to questions_path

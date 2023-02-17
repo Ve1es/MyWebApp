@@ -1,6 +1,6 @@
-en:
+ru:
   menu:
-    home: "Home"
+    home: "Главная"
   views:
     pagination:
       first: "&laquo;"
